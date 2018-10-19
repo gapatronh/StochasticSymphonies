@@ -125,9 +125,9 @@ bass_Durations_Count={bass_Unique[i]:0 for i in range(len(bass_Unique))}
 
 for it,measure in enumerate(soprano_Durations):   
     if it<len(soprano_Durations)-1:
-        soprano_Alto_Transitions[measure][list(alto_Unique).index(alto_Durations[it+1])]+=1
-        soprano_Tenor_Transitions[measure][list(tenor_Unique).index(tenor_Durations[it+1])]+=1 
-        soprano_Bass_Transitions[measure][list(bass_Unique).index(bass_Durations[it+1])]+=1
+        soprano_Alto_Transitions[measure][list(alto_Unique).index(alto_Durations[it])]+=1
+        soprano_Tenor_Transitions[measure][list(tenor_Unique).index(tenor_Durations[it])]+=1 
+        soprano_Bass_Transitions[measure][list(bass_Unique).index(bass_Durations[it])]+=1
 for it,measure in enumerate(alto_Durations):
     alto_Pitches_Transitions[measure][list(alto_Pitch_Unique).index(alto_Pitches[it])]+=1
     alto_Durations_Count[measure]+=1
