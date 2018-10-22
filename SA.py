@@ -98,6 +98,8 @@ for it,measure in enumerate(soprano_Durations):
 soprano_matrix=np.array([np.array(soprano_Transitions_Count[measure])/soprano_Count[measure] for measure in soprano_Unique])
 soprano_pitch_matrix=np.array([np.array(soprano_Pitch_Transitions_Count[measure])/soprano_Count[measure] for measure in soprano_Unique])
 spm=matrix_cleaner(soprano_pitch_matrix)
+
+
 #################################################DTU's
 alto_Durations=np.array(durationArrays["Alto"])
 alto_Unique=np.unique(alto_Durations)
@@ -152,9 +154,9 @@ psam=matrix_cleaner(psam)
 pstm=matrix_cleaner(pstm)
 psbm=matrix_cleaner(psbm)
 
-#####################################
+##################################### Music Generation####################################
 
-furDiana=stream.Score()
+fD=stream.Score()
 soprano_part=stream.Part()
 alto_part=stream.Part()
 tenor_part=stream.Part()
@@ -167,7 +169,8 @@ psoprano=[]
 palto=[]
 ptenor=[]
 pbass=[]
-for i in range(5):
+number_of_measures=5
+for i in range(number_of_measures):
     last_measure=soprano[-1]
     soprano.append(soprano_Unique[np.random.choice(range(len(soprano_Unique)),p=soprano_matrix[list(soprano_Unique).index(last_measure)])])
     alto.append(alto_Unique[np.random.choice(range(len(alto_Unique)),p=sam[list(soprano_Unique).index(last_measure)])])
@@ -179,13 +182,26 @@ for i in range(5):
     ptenor.append(tenor_Pitch_Unique[np.random.choice(range(len(tenor_Pitch_Unique)),p=pstm[list(tenor_Unique).index(tenor[-1])])])
     pbass.append(bass_Pitch_Unique[np.random.choice(range(len(bass_Pitch_Unique)),p=psbm[list(bass_Unique).index(bass[-1])])])
 
+##########################################
 def flatten(list_of_arrays):
+    """Input: list of arrays
+       Output: list of all the elements inside the arrays of original list"""
     return([item for array in list_of_arrays for item in array])
-
+#################Flatten durations and pitches arrays##########
 soprano=flatten(soprano);psoprano=flatten(psoprano)
 alto=flatten(alto);palto=flatten(palto)
 tenor=flatten(tenor);ptenor=flatten(ptenor)
 bass=flatten(bass); pbass=flatten(pbass)
+###########################################
+##### We join pitches and durations into note objects for each instrument
+for i in range(len(psoprano)):
+    if psoprano[i]=="R":
+        r=note.Rest()
+    else:
+        r=note.Note(psoprano[i])
+    r.quarterLength=soprano[i]
+    soprano_part.append(r)
+    
 for i in range(len(alto)):
     if palto[i]=="R":
         r=note.Rest()
@@ -207,7 +223,9 @@ for i in range(len(bass)):
         r=note.Note(pbass[i])
     r.quarterLength=bass[i]
     bass_part.append(r)
-furDiana.append(alto_part)
-furDiana.append(tenor_part)
-furDiana.append(bass_part)
-furDiana.show("musicxml")
+######### We add all parts to the stream
+fD.append(soprano_part)
+fD.append(alto_part)
+fD.append(tenor_part)
+fD.append(bass_part)
+fD.show("musicxml")
